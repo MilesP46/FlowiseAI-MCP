@@ -1,23 +1,23 @@
-name: flowiseai-mcp
-version: "1.0"
-license: MIT
-
-mcp:
-  runtime: docker
-
-build:
-  docker:
-    dockerfile: ./Dockerfile
-
-config:
-  parameters:
-    - name: FLOWISEAI_URL
-      type: string
-      description: FlowiseAI instance URL (e.g., http://localhost:3000)
-      required: true
-      default: http://localhost:3000
-    - name: FLOWISEAI_API_KEY  
-      type: string
-      description: API key for FlowiseAI authentication
-      required: true
-      sensitive: true
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    required:
+      - flowiseaiApiKey
+    properties:
+      flowiseaiApiKey:
+        type: string
+        description: Your FlowiseAI API key
+      flowiseaiUrl:
+        type: string
+        default: http://localhost:3000
+        description: FlowiseAI instance URL
+  commandFunction: >
+    (config) => ({
+      command: 'uvx',
+      args: ['--from', 'git+https://github.com/MilesP46/FlowiseAI-MCP.git', 'flowiseai-mcp'],
+      env: {
+        FLOWISEAI_API_KEY: config.flowiseaiApiKey,
+        FLOWISEAI_URL: config.flowiseaiUrl || 'http://localhost:3000'
+      }
+    })

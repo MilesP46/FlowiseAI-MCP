@@ -1,17 +1,10 @@
-# Minimal Dockerfile for Smithery MCP server
+# Simple Dockerfile for local testing (not used by Smithery)
 FROM python:3.12-slim
 
 WORKDIR /app
 
-# Copy and install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy application code with correct structure
-COPY src/flowiseai_mcp ./flowiseai_mcp
-
-# MCP servers communicate via stdio
-ENV PYTHONUNBUFFERED=1
+# Install package directly from GitHub
+RUN pip install git+https://github.com/MilesP46/FlowiseAI-MCP.git
 
 # Run the MCP server
-CMD ["python", "-m", "flowiseai_mcp.server"]
+CMD ["flowiseai-mcp"]
