@@ -1,66 +1,25 @@
-name: flowiseai-mcp
-version: 1.0.0
-description: Comprehensive MCP server for FlowiseAI with full API coverage
+version: 1
 
-# MCP server configuration
-mcp:
-  # How to run the server
-  command: python
-  args:
-    - "-m"
-    - "flowiseai_mcp.server"
+# Start configuration - how to run the MCP server
+start:
+  # Command to execute the MCP server
+  command: ["python", "-m", "flowiseai_mcp.server"]
   
-  # Environment variables
-  env:
-    PYTHONUNBUFFERED: "1"
-    # These will be provided by users
-    FLOWISEAI_URL: "${FLOWISEAI_URL}"
-    FLOWISEAI_API_KEY: "${FLOWISEAI_API_KEY}"
+  # MCP servers use stdio, not ports
+  # Port is not needed for MCP servers as they communicate via stdio
 
-# Build configuration
-build:
-  docker:
-    dockerfile: Dockerfile
-    context: .
+# Environment variables that users must provide
+env:
+  - name: FLOWISEAI_URL
+    description: "FlowiseAI instance URL (e.g., http://localhost:3000)"
+    required: true
+    default: "http://localhost:3000"
   
-# Runtime configuration  
-runtime:
-  type: stdio
-  features:
-    - tools
-    - resources
-    - streaming
-    
-# Required environment variables from users
-config:
-  env:
-    - name: FLOWISEAI_URL
-      description: "FlowiseAI instance URL (e.g., http://localhost:3000 or https://your-instance.com)"
-      required: true
-      default: "http://localhost:3000"
-    
-    - name: FLOWISEAI_API_KEY
-      description: "API key for FlowiseAI authentication"
-      required: true
-      sensitive: true
+  - name: FLOWISEAI_API_KEY
+    description: "API key for FlowiseAI authentication"
+    required: true
+    sensitive: true
 
-# Metadata
-metadata:
-  author: FlowiseAI MCP
-  license: MIT
-  repository: https://github.com/MilesP46/FlowiseAI-MCP
-  documentation: https://github.com/MilesP46/FlowiseAI-MCP#readme
-  categories:
-    - ai
-    - automation
-    - flowiseai
-    - mcp
-    - rag
-  keywords:
-    - flowiseai
-    - mcp
-    - chatflow
-    - agentflow
-    - rag
-    - streaming
-    - llm
+# Additional Python environment setup
+python:
+  requirements: requirements.txt
