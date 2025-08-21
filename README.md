@@ -31,23 +31,64 @@ A comprehensive Model Context Protocol (MCP) server for FlowiseAI that provides 
 
 ### Using uvx (Recommended)
 
-```bash
-# Install directly from GitHub
-uvx --from git+https://github.com/MilesP46/FlowiseAI-MCP.git flowiseai-mcp
+uvx is a tool for running Python packages in isolated environments. Install it first:
 
-# Or install from PyPI (when published)
-uvx flowiseai-mcp
+```bash
+# Install uvx if you haven't already
+pip install uvx
+# or
+pipx install uvx
 ```
 
-### Using pip
+#### Run from GitHub (Easiest)
+```bash
+# Run directly from GitHub repository
+uvx --from git+https://github.com/MilesP46/FlowiseAI-MCP.git flowiseai-mcp
+```
+
+#### Run from Local Directory
+```bash
+# Clone the repository
+git clone https://github.com/MilesP46/FlowiseAI-MCP.git
+cd FlowiseAI-MCP
+
+# Run with uvx from local directory
+uvx --from . flowiseai-mcp
+```
+
+#### Test Local Installation
+```bash
+# Verify uvx can build and run the package
+./test_uvx_local.sh
+```
+
+### Using Python Module Directly
 
 ```bash
 # Clone the repository
 git clone https://github.com/MilesP46/FlowiseAI-MCP.git
 cd FlowiseAI-MCP
 
-# Install with pip
+# Run as Python module
+PYTHONPATH=src python3 -m flowiseai_mcp
+```
+
+### Development Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/MilesP46/FlowiseAI-MCP.git
+cd FlowiseAI-MCP
+
+# Create virtual environment (recommended)
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install in development mode
 pip install -e .
+
+# Run the server
+flowiseai-mcp
 ```
 
 ## Configuration
@@ -107,7 +148,8 @@ export FLOWISEAI_API_KEY="your-cloud-api-key"
 
 Configuration varies based on how you're running the MCP server:
 
-#### Option 1: Using Published Package (Recommended)
+#### Option 1: Using uvx from Local Directory
+For local development and testing:
 **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
 **Windows**: `%APPDATA%\\Claude\\claude_desktop_config.json`
 
@@ -116,7 +158,7 @@ Configuration varies based on how you're running the MCP server:
   "mcpServers": {
     "flowiseai": {
       "command": "uvx",
-      "args": ["flowiseai-mcp"],
+      "args": ["--from", "/path/to/FlowiseAI-MCP", "flowiseai-mcp"],
       "env": {
         "FLOWISEAI_URL": "http://localhost:3000",
         "FLOWISEAI_API_KEY": "your-api-key"
@@ -126,8 +168,26 @@ Configuration varies based on how you're running the MCP server:
 }
 ```
 
-#### Option 2: Running from Local Source
-For development or testing local changes:
+#### Option 2: Using uvx from GitHub (Recommended for Production)
+For stable usage without local files:
+
+```json
+{
+  "mcpServers": {
+    "flowiseai": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/MilesP46/FlowiseAI-MCP.git", "flowiseai-mcp"],
+      "env": {
+        "FLOWISEAI_URL": "http://localhost:3000",
+        "FLOWISEAI_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+#### Option 3: Running Python Module Directly
+For development without uvx:
 
 ```json
 {
@@ -146,7 +206,7 @@ For development or testing local changes:
 }
 ```
 
-#### Option 3: Using Virtual Environment
+#### Option 4: Using Virtual Environment
 For isolated Python environment:
 
 ```json

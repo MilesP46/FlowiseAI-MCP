@@ -29,7 +29,6 @@ dependencies = [
     "pydantic>=2.0.0",
     "python-dotenv>=1.0.0",
     "sse-starlette>=2.0.0",
-    "asyncio>=3.4.3",
     "typing-extensions>=4.0.0",
 ]
 
@@ -46,3 +45,6 @@ flowiseai-mcp = "flowiseai_mcp.server:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/flowiseai_mcp"]
+
+[tool.hatch.build]
+sources = ["src"]

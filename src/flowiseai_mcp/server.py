@@ -923,6 +923,7 @@ class FlowiseAIMCPServer:
 
 def main():
     """Main entry point"""
+    server = None
     try:
         # Check required environment variables
         if not os.getenv("FLOWISEAI_URL"):
@@ -941,7 +942,8 @@ def main():
         logger.error(f"Server error: {str(e)}")
         sys.exit(1)
     finally:
-        asyncio.run(server.cleanup())
+        if server:
+            asyncio.run(server.cleanup())
 
 
 if __name__ == "__main__":
