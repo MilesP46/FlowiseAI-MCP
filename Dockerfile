@@ -1,38 +1,23 @@
-# Use Python 3.12 slim image for smaller size
+# Use Python 3.12 slim image
 FROM python:3.12-slim
 
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies if needed
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    gcc \
-    && rm -rf /var/lib/apt/lists/*
+# Copy only requirements first for better caching
+COPY requirements.txt ./
 
-# Copy project files first (for better caching)
-COPY pyproject.toml ./
-COPY README.md ./
-COPY LICENSE ./
+# Install dependencies directly from requirements.txt (faster)
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy source code
 COPY src/ ./src/
 
-# Install Python dependencies
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -e .
+# Set Python path
+ENV PYTHONPATH=/app
 
-# Create non-root user for security
-RUN useradd -m -u 1000 mcp && \
-    chown -R mcp:mcp /app
-
-# Switch to non-root user
-USER mcp
-
-# Set environment variables (can be overridden)
+# MCP servers need unbuffered output for stdio
 ENV PYTHONUNBUFFERED=1
-ENV FLOWISEAI_URL=http://localhost:3000
-ENV FLOWISEAI_API_KEY=""
 
-# Entry point for MCP server
-ENTRYPOINT ["python", "-m", "flowiseai_mcp.server"]
+# Run the MCP server
+CMD ["python", "-m", "flowiseai_mcp.server"]

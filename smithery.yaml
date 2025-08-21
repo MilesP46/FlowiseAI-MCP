@@ -1,25 +1,25 @@
-version: 1
+# Smithery configuration for MCP server
+runtime: "container"
 
-# Start configuration - how to run the MCP server
-start:
-  # Command to execute the MCP server
-  command: ["python", "-m", "flowiseai_mcp.server"]
-  
-  # MCP servers use stdio, not ports
-  # Port is not needed for MCP servers as they communicate via stdio
+# Build configuration
+build:
+  dockerfile: "Dockerfile"
+  dockerBuildPath: "."
 
 # Environment variables that users must provide
 env:
-  - name: FLOWISEAI_URL
-    description: "FlowiseAI instance URL (e.g., http://localhost:3000)"
-    required: true
-    default: "http://localhost:3000"
-  
-  - name: FLOWISEAI_API_KEY
-    description: "API key for FlowiseAI authentication"
-    required: true
-    sensitive: true
+  FLOWISEAI_URL: "${FLOWISEAI_URL}"
+  FLOWISEAI_API_KEY: "${FLOWISEAI_API_KEY}"
 
-# Additional Python environment setup
-python:
-  requirements: requirements.txt
+# Configuration schema for user inputs
+configSchema:
+  type: "object"
+  properties:
+    FLOWISEAI_URL:
+      type: "string"
+      description: "FlowiseAI instance URL (e.g., http://localhost:3000)"
+      default: "http://localhost:3000"
+    FLOWISEAI_API_KEY:
+      type: "string"
+      description: "API key for FlowiseAI authentication"
+  required: ["FLOWISEAI_URL", "FLOWISEAI_API_KEY"]
