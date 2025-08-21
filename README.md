@@ -339,24 +339,47 @@ uvx flowiseai-mcp
 
 ### Smithery.ai Deployment
 
-This MCP server is ready for deployment to [Smithery.ai](https://smithery.ai/):
+This MCP server is fully configured for deployment to [Smithery.ai](https://smithery.ai/) with Docker:
 
-1. Fork this repository to your GitHub account
+#### Prerequisites
+The repository includes all required files:
+- ✅ `Dockerfile` - Multi-stage Python build
+- ✅ `smithery.yaml` - Smithery configuration
+- ✅ `.dockerignore` - Optimized build context
 
-2. Go to [Smithery.ai](https://smithery.ai/) and sign in
+#### Deployment Steps
 
-3. Click "New Server" and select your forked repository
+1. **Fork or Push this repository** to your GitHub account
 
-4. Configure the server:
-   - Name: `FlowiseAI MCP`
-   - Command: `uvx flowiseai-mcp`
-   - Environment Variables:
-     - `FLOWISEAI_URL`: Your FlowiseAI instance URL
-     - `FLOWISEAI_API_KEY`: Your API key
+2. **Go to [Smithery.ai](https://smithery.ai/)** and sign in
 
-5. Deploy the server
+3. **Create New Server**:
+   - Click "New Server"
+   - Select your repository
+   - Smithery will automatically detect the configuration files
 
-6. Use the provided connection details in your AI tools
+4. **Configure Environment Variables**:
+   - `FLOWISEAI_URL`: Your FlowiseAI instance URL
+   - `FLOWISEAI_API_KEY`: Your API key
+
+5. **Deploy**:
+   - Click "Deploy"
+   - Smithery will build the Docker image and start your server
+
+6. **Connect to your AI tools**:
+   - Use the provided MCP connection details
+   - Add to Claude Desktop, Claude CLI, or other MCP-compatible tools
+
+#### Testing Before Deployment
+
+```bash
+# Test Docker build locally
+./test_docker_build.sh
+
+# Or manually:
+docker build -t flowiseai-mcp .
+docker run --rm -e FLOWISEAI_URL=http://localhost:3000 -e FLOWISEAI_API_KEY=test flowiseai-mcp
+```
 
 ## Available Tools
 
