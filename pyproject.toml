@@ -43,6 +43,5 @@ dev = [
 [project.scripts]
 flowiseai-mcp = "flowiseai_mcp.server:main"
 
-[tool.setuptools.packages]
-find = {}
-include = ["flowiseai_mcp", "flowiseai_mcp.*"]
+[tool.setuptools]
+packages = ["flowiseai_mcp"]
