@@ -78,10 +78,36 @@ The server automatically handles:
 
 ## Usage
 
+### Running Locally vs Remote
+
+The MCP server can connect to FlowiseAI instances running in different locations:
+
+#### Local FlowiseAI Instance
+```bash
+# For local development (default)
+export FLOWISEAI_URL="http://localhost:3000"
+export FLOWISEAI_API_KEY="your-local-api-key"
+```
+
+#### Network FlowiseAI Instance
+```bash
+# For network/LAN instances
+export FLOWISEAI_URL="http://192.168.1.100:3000"
+export FLOWISEAI_API_KEY="your-network-api-key"
+```
+
+#### Cloud FlowiseAI Instance
+```bash
+# For cloud-hosted instances
+export FLOWISEAI_URL="https://your-flowise.example.com"
+export FLOWISEAI_API_KEY="your-cloud-api-key"
+```
+
 ### Claude Desktop
 
-1. Update your Claude Desktop configuration file:
+Configuration varies based on how you're running the MCP server:
 
+#### Option 1: Using Published Package (Recommended)
 **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
 **Windows**: `%APPDATA%\\Claude\\claude_desktop_config.json`
 
@@ -100,19 +126,65 @@ The server automatically handles:
 }
 ```
 
-2. Restart Claude Desktop
-3. The FlowiseAI tools will appear in the tools panel
+#### Option 2: Running from Local Source
+For development or testing local changes:
+
+```json
+{
+  "mcpServers": {
+    "flowiseai": {
+      "command": "python",
+      "args": ["-m", "flowiseai_mcp.server"],
+      "cwd": "/path/to/FlowiseAI-MCP",
+      "env": {
+        "PYTHONPATH": "/path/to/FlowiseAI-MCP/src",
+        "FLOWISEAI_URL": "http://localhost:3000",
+        "FLOWISEAI_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+#### Option 3: Using Virtual Environment
+For isolated Python environment:
+
+```json
+{
+  "mcpServers": {
+    "flowiseai": {
+      "command": "/path/to/venv/bin/python",
+      "args": ["-m", "flowiseai_mcp.server"],
+      "cwd": "/path/to/FlowiseAI-MCP",
+      "env": {
+        "FLOWISEAI_URL": "http://localhost:3000",
+        "FLOWISEAI_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+After updating configuration:
+1. Save the file
+2. Restart Claude Desktop completely
+3. Look for "flowiseai" in the tools panel (🔧 icon)
+4. Test with the `ping` tool to verify connection
 
 ### Claude Code CLI
 
-1. Install Claude Code CLI:
+#### Option 1: Global Installation
+Install globally and configure:
+
 ```bash
+# Install Claude Code CLI
 npm install -g @anthropic/claude-code
+
+# Install MCP server globally
+uvx --from git+https://github.com/MilesP46/FlowiseAI-MCP.git flowiseai-mcp
 ```
 
-2. Configure MCP servers in your project:
-
-Create `.claude/mcp_servers.json`:
+Create `.claude/mcp_servers.json` in your project:
 ```json
 {
   "flowiseai": {
@@ -126,10 +198,84 @@ Create `.claude/mcp_servers.json`:
 }
 ```
 
-3. Run Claude Code:
+#### Option 2: Local Development
+For testing local changes:
+
+```json
+{
+  "flowiseai": {
+    "command": "python3",
+    "args": ["-m", "flowiseai_mcp.server"],
+    "cwd": "/absolute/path/to/FlowiseAI-MCP",
+    "env": {
+      "PYTHONPATH": "/absolute/path/to/FlowiseAI-MCP/src",
+      "FLOWISEAI_URL": "http://localhost:3000",
+      "FLOWISEAI_API_KEY": "your-api-key"
+    }
+  }
+}
+```
+
+#### Option 3: Using .env File
+Create `.env` in your project root:
+```env
+FLOWISEAI_URL=http://localhost:3000
+FLOWISEAI_API_KEY=your-api-key
+```
+
+Then in `.claude/mcp_servers.json`:
+```json
+{
+  "flowiseai": {
+    "command": "uvx",
+    "args": ["flowiseai-mcp"]
+  }
+}
+```
+
+Run Claude Code:
 ```bash
+# From your project directory
 claude-code
 ```
+
+### Troubleshooting
+
+#### Verify Installation
+```bash
+# Test the server directly
+python -m flowiseai_mcp.server
+
+# Or with uvx
+uvx flowiseai-mcp
+```
+
+#### Check Connection
+1. Ensure FlowiseAI is running and accessible
+2. Verify the URL format (http/https, port number)
+3. Test API key validity
+4. Check firewall/network settings for remote instances
+
+#### Common Issues
+
+**"Server not found"**: 
+- Ensure the command path is correct
+- Check Python/uvx is in PATH
+- Verify the cwd directory exists
+
+**"Connection refused"**:
+- Check FlowiseAI is running
+- Verify URL and port are correct
+- Check firewall settings
+
+**"Authentication failed"**:
+- Verify API key is correct
+- Check API key permissions in FlowiseAI
+
+**"Tools not appearing"**:
+- Restart Claude Desktop/CLI completely
+- Check configuration file syntax
+- Look for errors in Claude's developer console
 
 ### Smithery.ai Deployment
 
