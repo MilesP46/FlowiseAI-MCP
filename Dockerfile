@@ -1,22 +1,16 @@
-# Use Python 3.12 slim image
+# Minimal Dockerfile for Smithery MCP server
 FROM python:3.12-slim
 
-# Set working directory
 WORKDIR /app
 
-# Copy only requirements first for better caching
-COPY requirements.txt ./
-
-# Install dependencies directly from requirements.txt (faster)
+# Copy and install dependencies
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy source code
-COPY src/ ./src/
+# Copy application code with correct structure
+COPY src/flowiseai_mcp ./flowiseai_mcp
 
-# Set Python path
-ENV PYTHONPATH=/app
-
-# MCP servers need unbuffered output for stdio
+# MCP servers communicate via stdio
 ENV PYTHONUNBUFFERED=1
 
 # Run the MCP server

@@ -1,25 +1,23 @@
-# Smithery configuration for MCP server
-runtime: "container"
+name: flowiseai-mcp
+version: "1.0"
+license: MIT
 
-# Build configuration
+mcp:
+  runtime: docker
+
 build:
-  dockerfile: "Dockerfile"
-  dockerBuildPath: "."
+  docker:
+    dockerfile: ./Dockerfile
 
-# Environment variables that users must provide
-env:
-  FLOWISEAI_URL: "${FLOWISEAI_URL}"
-  FLOWISEAI_API_KEY: "${FLOWISEAI_API_KEY}"
-
-# Configuration schema for user inputs
-configSchema:
-  type: "object"
-  properties:
-    FLOWISEAI_URL:
-      type: "string"
-      description: "FlowiseAI instance URL (e.g., http://localhost:3000)"
-      default: "http://localhost:3000"
-    FLOWISEAI_API_KEY:
-      type: "string"
-      description: "API key for FlowiseAI authentication"
-  required: ["FLOWISEAI_URL", "FLOWISEAI_API_KEY"]
+config:
+  parameters:
+    - name: FLOWISEAI_URL
+      type: string
+      description: FlowiseAI instance URL (e.g., http://localhost:3000)
+      required: true
+      default: http://localhost:3000
+    - name: FLOWISEAI_API_KEY  
+      type: string
+      description: API key for FlowiseAI authentication
+      required: true
+      sensitive: true
