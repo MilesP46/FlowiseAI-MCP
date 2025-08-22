@@ -1,56 +1,6 @@
 name: flowiseai-mcp
-description: Comprehensive MCP server for FlowiseAI with 46 tools for chatflows, assistants, predictions, document stores, and vector operations
-version: 1.0.0
-author: MilesP46
-license: MIT
-repository: https://github.com/MilesP46/FlowiseAI-MCP
-homepage: https://github.com/MilesP46/FlowiseAI-MCP#readme
+description: MCP server for FlowiseAI with 46 tools for chatflows, assistants, predictions, document stores, and vector operations
 remote: false
-
-# Tags for discoverability
-tags:
-  - flowiseai
-  - chatflow
-  - llm
-  - ai-agents
-  - rag
-  - vector-database
-  - document-store
-  - automation
-
-# MCP protocol information
-protocol:
-  version: "2024-11-05"
-  features:
-    - tools
-    - resources
-    - streaming
-
-# Tool categories for documentation
-toolCategories:
-  assistants:
-    description: "Manage AI assistants"
-    count: 5
-  chatflows:
-    description: "Create and manage chatflows"
-    count: 6
-  predictions:
-    description: "Run predictions and inference"
-    count: 2
-  documents:
-    description: "Document store and vector operations"
-    count: 12
-  feedback:
-    description: "Collect and manage feedback"
-    count: 3
-  customTools:
-    description: "Create custom tools"
-    count: 5
-  variables:
-    description: "Runtime variables"
-    count: 4
-
-# Start command configuration
 startCommand:
   type: stdio
   configSchema:
@@ -61,44 +11,16 @@ startCommand:
       flowiseaiApiKey:
         type: string
         description: Your FlowiseAI API key
-        sensitive: true
       flowiseaiUrl:
         type: string
         default: http://localhost:3000
         description: FlowiseAI instance URL
-      debug:
-        type: boolean
-        default: false
-        description: Enable debug logging
   commandFunction: >
     (config) => ({
       command: 'uvx',
       args: ['--from', 'git+https://github.com/MilesP46/FlowiseAI-MCP.git', 'flowiseai-mcp'],
       env: {
         FLOWISEAI_API_KEY: config.flowiseaiApiKey,
-        FLOWISEAI_URL: config.flowiseaiUrl || 'http://localhost:3000',
-        DEBUG: config.debug ? 'true' : 'false'
+        FLOWISEAI_URL: config.flowiseaiUrl || 'http://localhost:3000'
       }
     })
-
-# Examples for documentation
-examples:
-  - title: "List all chatflows"
-    description: "Retrieve all available chatflows"
-    tool: "chatflow_list"
-    arguments: {}
-  
-  - title: "Run a prediction"
-    description: "Execute a chatflow with a question"
-    tool: "prediction_run"
-    arguments:
-      chatflow_id: "example-id"
-      question: "Hello, how can you help?"
-      streaming: false
-  
-  - title: "Create document store"
-    description: "Set up a new document store for RAG"
-    tool: "docstore_create"
-    arguments:
-      name: "Knowledge Base"
-      description: "Company documentation"

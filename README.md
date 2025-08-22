@@ -1,5 +1,7 @@
 # FlowiseAI MCP Server
 
+[![smithery badge](https://smithery.ai/badge/@MilesP46/flowiseai-mcp)](https://smithery.ai/server/@MilesP46/flowiseai-mcp)
+
 A comprehensive Model Context Protocol (MCP) server for FlowiseAI that provides complete API coverage for automating and managing FlowiseAI chatflows, assistants, and AgentFlow V2.
 
 ## Features
@@ -29,7 +31,13 @@ A comprehensive Model Context Protocol (MCP) server for FlowiseAI that provides 
 
 ## Installation
 
-### Using uvx (Recommended)
+### Via Smithery CLI (Recommended for Claude Desktop)
+
+```bash
+npx @smithery/cli install @MilesP46/flowiseai-mcp --client claude
+```
+
+### Using uvx
 
 ```bash
 # Install directly from GitHub

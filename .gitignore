@@ -154,3 +154,25 @@ ehthumbs.db
 *.sock
 *.pid
 logs/
+
+# Test files and temporary scripts
+test_*.py
+test_*.sh
+*_test.py
+*_test.sh
+
+# Temporary documentation and fix instructions
+FIX_INSTRUCTIONS.md
+SMITHERY_BUILD_FIX.md
+SMITHERY_MANUAL_CONFIG.md
+SMITHERY_DEPLOYMENT.md
+flowiseai-mcp-checklist.md
+
+# User-specific configuration examples
+claude_desktop_config.json
+
+# Local development files
+docker-compose.yml
+.env
+.env.local
+.env.example
