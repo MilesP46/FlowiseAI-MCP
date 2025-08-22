@@ -24,8 +24,12 @@ from .models import Tool as FlowiseTool
 # Load environment variables
 load_dotenv()
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+# Configure logging to stderr to avoid interfering with MCP protocol on stdout
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler(sys.stderr)]
+)
 logger = logging.getLogger(__name__)
 
 

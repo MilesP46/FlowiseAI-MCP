@@ -4,10 +4,11 @@ import sys
 import os
 import logging
 
-# Set up logging
+# Set up logging to stderr to avoid interfering with MCP protocol on stdout
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler(sys.stderr)]
 )
 logger = logging.getLogger(__name__)
 
