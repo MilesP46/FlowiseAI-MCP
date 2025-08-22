@@ -52,6 +52,11 @@ class FlowiseAIMCPServer:
     def __init__(self):
         self.server = Server("flowiseai-mcp")
         self.client: Optional[FlowiseAIClient] = None
+        self.initialization_options = InitializationOptions(
+            server_name="flowiseai-mcp",
+            server_version="1.0.0",
+            capabilities=ServerCapabilities()
+        )
         self.setup_handlers()
         
     def setup_handlers(self):
@@ -941,12 +946,7 @@ class FlowiseAIMCPServer:
     async def run(self):
         """Run the MCP server"""
         async with stdio_server() as (read_stream, write_stream):
-            initialization_options = InitializationOptions(
-                server_name="flowiseai-mcp",
-                server_version="1.0.0",
-                capabilities=ServerCapabilities()
-            )
-            await self.server.run(read_stream, write_stream, initialization_options)
+            await self.server.run(read_stream, write_stream, self.initialization_options)
     
     async def cleanup(self):
         """Cleanup resources"""
