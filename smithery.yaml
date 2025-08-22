@@ -17,17 +17,10 @@ startCommand:
         description: FlowiseAI instance URL
   commandFunction: >
     (config) => ({
-      command: 'uvx',
-      args: ['--from', 'git+https://github.com/MilesP46/FlowiseAI-MCP.git', 'flowiseai-mcp'],
+      command: 'flowiseai-mcp',
+      args: [],
       env: {
         FLOWISEAI_API_KEY: config.flowiseaiApiKey,
         FLOWISEAI_URL: config.flowiseaiUrl || 'http://localhost:3000'
       }
     })
-testCommand:
-  type: stdio
-  command: python
-  args: ["-m", "flowiseai_mcp"]
-  env:
-    FLOWISEAI_API_KEY: test-key
-    FLOWISEAI_URL: http://localhost:3000

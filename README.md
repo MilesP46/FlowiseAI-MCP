@@ -31,17 +31,38 @@ A comprehensive Model Context Protocol (MCP) server for FlowiseAI that provides 
 
 ## Installation
 
-### Via Smithery CLI (Recommended for Claude Desktop)
+### Via Smithery (Recommended for Claude Desktop)
+
+The server is available on [Smithery.ai](https://smithery.ai/server/@MilesP46/flowiseai-mcp) and can be installed automatically:
 
 ```bash
 npx @smithery/cli install @MilesP46/flowiseai-mcp --client claude
 ```
 
-### Using uvx
+### Using uvx (Alternative for Local Development)
+
+For local development or manual installation with Claude Desktop:
 
 ```bash
 # Install directly from GitHub
 uvx --from git+https://github.com/MilesP46/FlowiseAI-MCP.git flowiseai-mcp
+```
+
+For Claude Desktop, add to your config (see `claude_desktop_config.json.example`):
+
+```json
+{
+  "mcpServers": {
+    "flowiseai": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/MilesP46/FlowiseAI-MCP.git", "flowiseai-mcp"],
+      "env": {
+        "FLOWISEAI_URL": "http://localhost:3000",
+        "FLOWISEAI_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
 ```
 
 ### Local Development

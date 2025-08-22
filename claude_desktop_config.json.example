@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "flowiseai": {
+      "command": "/Users/admin/.local/bin/uvx",
+      "args": ["--from", "git+https://github.com/MilesP46/FlowiseAI-MCP.git", "flowiseai-mcp"],
+      "env": {
+        "FLOWISEAI_URL": "http://localhost:3000",
+        "FLOWISEAI_API_KEY": "YOUR_API_KEY_HERE"
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-# Minimal Dockerfile for Smithery.ai deployment
+# Dockerfile for Smithery.ai deployment
 FROM python:3.12-slim
 
 WORKDIR /app
@@ -10,5 +10,5 @@ COPY . .
 RUN pip install --no-cache-dir .
 
 # The MCP server will be started via smithery.yaml's startCommand
-# This CMD is just a placeholder that Smithery will override
+# The installed package provides 'flowiseai-mcp' command via project.scripts
 CMD ["flowiseai-mcp"]
