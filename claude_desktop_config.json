@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "flowiseai-mcp": {
+      "command": "python3",
+      "args": ["-m", "flowiseai_mcp"],
+      "env": {
+        "FLOWISEAI_URL": "http://localhost:3000",
+        "FLOWISEAI_API_KEY": "your-api-key-here",
+        "PYTHONPATH": "/Users/admin/CodingMac/FlowiseAI-MCP"
+      }
+    }
+  }
+}

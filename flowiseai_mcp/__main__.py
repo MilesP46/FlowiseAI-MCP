@@ -4,9 +4,9 @@ import sys
 import os
 import logging
 
-# Set up logging to stderr to avoid interfering with MCP protocol on stdout
+# Set up logging to stderr with ERROR level only to avoid interfering with MCP protocol
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.ERROR,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[logging.StreamHandler(sys.stderr)]
 )
@@ -18,10 +18,12 @@ def main():
         # Import server module
         from .server import main as server_main
         
-        # Log startup
-        logger.info("Starting FlowiseAI MCP Server...")
-        logger.info(f"FLOWISEAI_URL: {os.getenv('FLOWISEAI_URL', 'not set')}")
-        logger.info(f"FLOWISEAI_API_KEY: {'set' if os.getenv('FLOWISEAI_API_KEY') else 'not set'}")
+        # Debug logging only if DEBUG env var is set
+        if os.getenv('DEBUG', '').lower() in ('true', '1', 'yes'):
+            logger.setLevel(logging.INFO)
+            logger.info("Starting FlowiseAI MCP Server...")
+            logger.info(f"FLOWISEAI_URL: {os.getenv('FLOWISEAI_URL', 'not set')}")
+            logger.info(f"FLOWISEAI_API_KEY: {'set' if os.getenv('FLOWISEAI_API_KEY') else 'not set'}")
         
         # Run the server
         server_main()

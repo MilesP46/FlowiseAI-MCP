@@ -12,9 +12,10 @@ from dotenv import load_dotenv
 
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
+from mcp.server.models import InitializationOptions
 from mcp.types import (
     Tool as MCPTool, TextContent, ImageContent, EmbeddedResource,
-    BlobResourceContents, TextResourceContents
+    BlobResourceContents, TextResourceContents, ServerCapabilities
 )
 
 from .client import FlowiseAIClient
@@ -24,13 +25,17 @@ from .models import Tool as FlowiseTool
 # Load environment variables
 load_dotenv()
 
-# Configure logging to stderr to avoid interfering with MCP protocol on stdout
+# Configure logging to stderr with ERROR level only to avoid interfering with MCP protocol
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.ERROR,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[logging.StreamHandler(sys.stderr)]
 )
 logger = logging.getLogger(__name__)
+
+# Enable debug logging if DEBUG env var is set
+if os.getenv('DEBUG', '').lower() in ('true', '1', 'yes'):
+    logger.setLevel(logging.DEBUG)
 
 
 def find_free_port() -> int:
@@ -917,7 +922,12 @@ class FlowiseAIMCPServer:
     async def run(self):
         """Run the MCP server"""
         async with stdio_server() as (read_stream, write_stream):
-            await self.server.run(read_stream, write_stream)
+            initialization_options = InitializationOptions(
+                server_name="flowiseai-mcp",
+                server_version="1.0.0",
+                capabilities=ServerCapabilities()
+            )
+            await self.server.run(read_stream, write_stream, initialization_options)
     
     async def cleanup(self):
         """Cleanup resources"""
@@ -929,11 +939,11 @@ def main():
     """Main entry point"""
     server = None
     try:
-        # Check required environment variables
-        if not os.getenv("FLOWISEAI_URL"):
+        # Check required environment variables (only log warnings in debug mode)
+        if not os.getenv("FLOWISEAI_URL") and logger.level <= logging.WARNING:
             logger.warning("FLOWISEAI_URL not set, using default: http://localhost:3000")
         
-        if not os.getenv("FLOWISEAI_API_KEY"):
+        if not os.getenv("FLOWISEAI_API_KEY") and logger.level <= logging.WARNING:
             logger.warning("FLOWISEAI_API_KEY not set, authentication may fail")
         
         # Create and run server
@@ -941,9 +951,13 @@ def main():
         asyncio.run(server.run())
         
     except KeyboardInterrupt:
-        logger.info("Server stopped by user")
+        if logger.level <= logging.INFO:
+            logger.info("Server stopped by user")
     except Exception as e:
+        import traceback
         logger.error(f"Server error: {str(e)}")
+        if logger.level <= logging.DEBUG:
+            logger.error(f"Traceback: {traceback.format_exc()}")
         sys.exit(1)
     finally:
         if server:
