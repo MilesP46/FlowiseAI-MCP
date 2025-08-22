@@ -1,26 +1,21 @@
 name: flowiseai-mcp
 description: MCP server for FlowiseAI with 46 tools for chatflows, assistants, predictions, document stores, and vector operations
-remote: false
+runtime: container
+build:
+  dockerBuildPath: .
 startCommand:
-  type: stdio
+  type: http
   configSchema:
     type: object
-    required:
-      - flowiseaiApiKey
     properties:
       flowiseaiApiKey:
         type: string
-        description: Your FlowiseAI API key
+        description: Your FlowiseAI API key (optional for test mode)
+        default: test-key
       flowiseaiUrl:
         type: string
         default: http://localhost:3000
         description: FlowiseAI instance URL
-  commandFunction: >
-    (config) => ({
-      command: 'flowiseai-mcp',
-      args: [],
-      env: {
-        FLOWISEAI_API_KEY: config.flowiseaiApiKey,
-        FLOWISEAI_URL: config.flowiseaiUrl || 'http://localhost:3000'
-      }
-    })
+env:
+  PORT: "8000"
+  HOST: "0.0.0.0"

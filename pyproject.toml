@@ -30,6 +30,8 @@ dependencies = [
     "python-dotenv>=1.0.0",
     "sse-starlette>=2.0.0",
     "typing-extensions>=4.0.0",
+    "starlette>=0.37.0",
+    "uvicorn>=0.30.0",
 ]
 
 [project.optional-dependencies]
@@ -42,6 +44,7 @@ dev = [
 
 [project.scripts]
 flowiseai-mcp = "flowiseai_mcp.server:main"
+flowiseai-mcp-http = "flowiseai_mcp.http_server:main"
 
 [tool.setuptools]
 packages = ["flowiseai_mcp"]

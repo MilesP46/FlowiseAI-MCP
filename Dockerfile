@@ -9,6 +9,9 @@ COPY . .
 # Install the package from local directory
 RUN pip install --no-cache-dir .
 
-# The MCP server will be started via smithery.yaml's startCommand
-# The installed package provides 'flowiseai-mcp' command via project.scripts
-CMD ["flowiseai-mcp"]
+# Expose the HTTP port for remote deployment
+EXPOSE 8000
+
+# Default to HTTP server for smithery.ai remote deployment
+# Override with flowiseai-mcp for stdio if needed
+CMD ["flowiseai-mcp-http"]
