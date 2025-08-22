@@ -1,3 +1,6 @@
+name: flowiseai-mcp
+description: MCP server for FlowiseAI with comprehensive API coverage
+remote: false
 startCommand:
   type: stdio
   configSchema:
