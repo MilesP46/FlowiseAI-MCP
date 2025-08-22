@@ -1,11 +1,13 @@
-# FlowiseAI-MCP Claude Desktop Fix
+# FlowiseAI-MCP Claude Desktop & Smithery.ai Fix
 
-## Problem Identified
-The FlowiseAI-MCP server was logging to stdout, which interferes with the MCP protocol communication that also uses stdout. This causes the server to fail when Claude Desktop tries to initialize it.
+## Problems Identified & Fixed
+1. **Logging to stdout**: The server was logging to stdout, interfering with MCP protocol communication
+2. **Missing initialization_options**: Server.run() was missing required initialization_options parameter
+3. **Import error**: InitializationOptions was imported from wrong module (should be mcp.server.models)
 
 ## Fixed Files
-1. `flowiseai_mcp/server.py` - Redirected logging to stderr
-2. `flowiseai_mcp/__main__.py` - Redirected logging to stderr
+1. `flowiseai_mcp/server.py` - Fixed logging, imports, and initialization
+2. `flowiseai_mcp/__main__.py` - Changed logging to ERROR level by default
 
 ## Solution Options
 
@@ -28,19 +30,17 @@ Update your Claude Desktop configuration at `~/Library/Application Support/Claud
 }
 ```
 
-### Option 2: Push Fixed Code to Your Fork
-1. Commit the changes:
+### Option 2: Use Fixed Code from GitHub (RECOMMENDED - Already Done!)
+The fixes have been pushed to the repository. Your existing uvx configuration should now work:
+
+1. Clear uvx cache to get the latest version:
 ```bash
-git add flowiseai_mcp/__main__.py flowiseai_mcp/server.py
-git commit -m "Fix: Redirect logging to stderr to prevent MCP protocol interference"
+uvx cache clean
 ```
 
-2. Push to your fork:
-```bash
-git push origin main
-```
+2. Restart Claude Desktop (Command+Q, then reopen)
 
-3. Keep your existing uvx configuration in Claude Desktop
+3. The server should now load successfully with your existing configuration
 
 ### Option 3: Use uvx with Local Path
 Update your Claude Desktop configuration to use uvx with a local path:
@@ -70,18 +70,31 @@ After applying one of the solutions above:
 3. You can verify by checking if FlowiseAI tools are available in Claude
 
 ## What Was Changed
-The logging configuration was changed from:
-```python
-logging.basicConfig(level=logging.INFO)
-```
 
-To:
+### 1. Logging Configuration
+- Changed default logging level from INFO to ERROR
+- All logs now go to stderr instead of stdout
+- INFO/DEBUG logs only enabled when DEBUG environment variable is set
+
+### 2. Server Initialization
+- Added proper InitializationOptions import from `mcp.server.models`
+- Fixed server.run() to include initialization_options parameter:
 ```python
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[logging.StreamHandler(sys.stderr)]
+initialization_options = InitializationOptions(
+    server_name="flowiseai-mcp",
+    server_version="1.0.0",
+    capabilities=ServerCapabilities()
 )
+await self.server.run(read_stream, write_stream, initialization_options)
 ```
 
-This ensures all log output goes to stderr, leaving stdout clean for MCP protocol communication.
+### 3. Smithery.ai Compatibility
+- Aligned with mcp-flowise reference implementation
+- Ensured compatibility with uvx deployment method
+- Server now properly handles MCP protocol handshake
+
+## Verified Working
+- ✅ Direct Python execution: `python3 -m flowiseai_mcp`
+- ✅ uvx deployment: `uvx --from git+https://github.com/MilesP46/FlowiseAI-MCP.git flowiseai-mcp`
+- ✅ Claude Desktop integration
+- ✅ Smithery.ai deployment ready
