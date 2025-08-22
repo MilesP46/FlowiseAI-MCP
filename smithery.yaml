@@ -24,3 +24,10 @@ startCommand:
         FLOWISEAI_URL: config.flowiseaiUrl || 'http://localhost:3000'
       }
     })
+testCommand:
+  type: stdio
+  command: python
+  args: ["-m", "flowiseai_mcp"]
+  env:
+    FLOWISEAI_API_KEY: test-key
+    FLOWISEAI_URL: http://localhost:3000
